@@ -77,17 +77,6 @@ public class RotationUtils implements InstanceAccess {
     }
 
     @EventTarget
-    @EventPriority(1000)
-    public void onUpdate(UpdateEvent event) {
-        if (shouldRotate() && (fixSprint || currentCorrection != MovementCorrection.OFF)) {
-            if (Math.abs(currentRotation[0] % 360 - Math.toDegrees(MovementUtils.getDirection()) % 360) > 45) {
-                KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), false);
-                mc.thePlayer.setSprinting(false);
-            }
-        }
-    }
-
-    @EventTarget
     @EventPriority(-100)
     public void onRotationUpdate(UpdateEvent event) {
 
@@ -108,53 +97,21 @@ public class RotationUtils implements InstanceAccess {
     }
 
     @EventTarget
+    private void onMove(MoveInputEvent event) {
+        if (currentCorrection == MovementCorrection.SILENT) {
+            /*
+             * Calculating movement fix
+             */
+            final float yaw = currentRotation[0];
+            MovementUtils.fixMovement(event, yaw);
+        }
+    }
+
+    @EventTarget
     private void onStrafe(StrafeEvent event) {
         if (shouldRotate()) {
-            if (currentCorrection == MovementCorrection.STRICT) {
+            if (currentCorrection == MovementCorrection.STRICT || currentCorrection == MovementCorrection.SILENT) {
                 event.setYaw(currentRotation[0]);
-            }
-            if (currentCorrection == MovementCorrection.SILENT) {
-                EntityPlayerSP player = mc.thePlayer;
-
-                double diff = Math.toRadians(player.rotationYaw - currentRotation[0]);
-
-                float calcForward;
-                float calcStrafe;
-
-                float strafe = event.getStrafe() / 0.98f;
-                float forward = event.getForward() / 0.98f;
-
-                float modifiedForward = (float) Math.ceil(Math.abs(forward)) * Math.signum(forward);
-                float modifiedStrafe = (float) Math.ceil(Math.abs(strafe)) * Math.signum(strafe);
-
-                calcForward = Math.round(modifiedForward * MathHelper.cos((float) diff) + modifiedStrafe * MathHelper.sin((float) diff));
-                calcStrafe = Math.round(modifiedStrafe * MathHelper.cos((float) diff) - modifiedForward * MathHelper.sin((float) diff));
-
-                float f = (event.getForward() != 0f) ? event.getForward() : event.getStrafe();
-
-                calcForward *= Math.abs(f);
-                calcStrafe *= Math.abs(f);
-
-                event.setYaw(currentRotation[0]);
-                event.setStrafe(calcStrafe);
-                event.setForward(calcForward);
-
-                /*double d = calcStrafe * calcStrafe + calcForward * calcForward;
-
-                if (d >= 1.0E-4f) {
-                    d = friction / Math.sqrt(d);
-
-                    calcStrafe *= (float) d;
-                    calcForward *= (float) d;
-
-                    double yawRad = Math.toRadians(currentRotation[0]);
-                    double yawSin = MathHelper.sin((float) yawRad);
-                    double yawCos = MathHelper.cos((float) yawRad);
-
-                    player.motionX += calcStrafe * yawCos - calcForward * yawSin;
-                    player.motionZ += calcForward * yawCos + calcStrafe * yawSin;
-                }
-                event.setCancelled(true);*/
             }
         }
     }
