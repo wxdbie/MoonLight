@@ -144,7 +144,7 @@ public class ESP extends Module {
 
                     for (ItemStack stack : items) {
                         RenderUtils.renderItemStack(stack, armorX, renderY - 25 * tagsSize.get(), tagsSize.get() + tagsSize.get() / 2, true);
-                        armorX += 18 * tagsSize.get();
+                        armorX += 24 * tagsSize.get();
                     }
                 }
             }
