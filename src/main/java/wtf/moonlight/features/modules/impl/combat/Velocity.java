@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 
 @ModuleInfo(name = "Velocity", category = ModuleCategory.Combat)
 public class Velocity extends Module {
-    private final ModeValue mode = new ModeValue("Mode", new String[]{"Cancel", "Air","Horizontal","Watchdog", "Boost", "Jump Reset", "GrimAC","Intave Reduce","Legit"}, "Air", this);
+    private final ModeValue mode = new ModeValue("Mode", new String[]{"Cancel", "Air","Horizontal","Watchdog", "Boost", "Jump Reset", "GrimAC","Intave Reduce","Legit", "Percentages"}, "Air", this);
     private final ModeValue grimMode = new ModeValue("Grim Mode", new String[]{"Reduce", "1.17"}, "Reduce", this, () -> mode.is("GrimAC"));
     private final SliderValue reverseTick = new SliderValue("Boost Tick", 1, 1, 5, 1, this, () -> mode.is("Boost"));
     private final SliderValue reverseStrength = new SliderValue("Boost Strength", 1, 0.1f, 1, 0.01f, this, () -> mode.is("Boost"));
@@ -48,6 +48,8 @@ public class Velocity extends Module {
     private final SliderValue jumpResetHurtTime = new SliderValue("Jump Reset Hurt Time", 9, 1, 10, 1, this, () -> mode.is("Jump Reset") && jumpResetMode.is("Hurt Time"));
     private final SliderValue intaveHurtTime = new SliderValue("Intave Hurt Time", 9, 1, 10, 1, this, () -> mode.is("Intave Reduce"));
     private final SliderValue intaveFactor = new SliderValue("Intave Factor", 0.6f, 0, 1, 0.05f, this, () -> mode.is("Intave Reduce"));
+    private final SliderValue horizontal = new SliderValue("Horizontal", 70, 0, 100, 0.1f, this, () -> mode.is("Percentages"));
+    private final SliderValue vertical = new SliderValue("Vertical", 0, 0, 100, 0.1f, this, () -> mode.is("Percentages"));
     private int lastSprint = -1;
     private boolean veloPacket = false;
     private boolean canSpoof, canCancel;
@@ -185,6 +187,11 @@ public class Velocity extends Module {
 
                 case "Intave Reduce":
                     veloPacket = true;
+                    break;
+                case "Percentages" :
+                    s12.motionX = (int) ((double) s12.motionX * ((double) horizontal.get() / 100.0D));
+                    s12.motionY = (int) ((double) s12.motionY * ((double) vertical.get() / 100.0D));
+                    s12.motionZ = (int) ((double) s12.motionZ * ((double) horizontal.get() / 100.0D));
                     break;
             }
         }
