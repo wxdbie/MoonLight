@@ -100,14 +100,18 @@ public class PotionHUDWidget extends Widget {
                 String durationString = Potion.getDurationString(potion);
                 if (Potion.potionTypes[potion.getPotionID()].hasStatusIcon()) {
                     GL11.glPushMatrix();
-                    RenderUtils.resetColor();
-                    RenderHelper.enableGUIStandardItemLighting();
+                    GL11.glColor4f(1f, 1f, 1f, 1f);
+                    RenderHelper.disableStandardItemLighting();
                     int i1 = Potion.potionTypes[potion.getPotionID()].getStatusIconIndex();
                     GL11.glScaled(0.5, 0.5, 0.5);
                     mc.getTextureManager().bindTexture(GuiContainer.inventoryBackground);
-                    Gui.drawTexturedModalRect((renderX + 4) * 9 / 4.5f, ((4 + 2 + Fonts.interRegular.get(15).getHeight() + renderY + yOffset + 0.5f + potions.indexOf(potion) * 13) * 9) / 4.5f, i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18);
+
+                    Gui.drawTexturedModalRect(
+                            (renderX + 4) * 9 / 4.5f,
+                            ((4 + 2 + Fonts.interRegular.get(15).getHeight() + renderY + yOffset + 0.5f + potions.indexOf(potion) * 13) * 9) / 4.5f,
+                            i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18
+                    );
                     GL11.glScaled(2, 2, 2);
-                    RenderHelper.disableStandardItemLighting();
                     GL11.glPopMatrix();
                 }
                 Fonts.interRegular.get(16).drawString(potionString, (renderX + 15), (Fonts.interRegular.get(15).getHeight() + renderY + yOffset + 4 + 2 + 2) + potions.indexOf(potion) * 13, -1);
@@ -285,14 +289,22 @@ public class PotionHUDWidget extends Widget {
 
                 if (Potion.potionTypes[potion.getPotionID()].hasStatusIcon()) {
                     GL11.glPushMatrix();
-                    RenderUtils.resetColor();
-                    RenderHelper.enableGUIStandardItemLighting();
+                    GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+                    GL11.glColor4f(1f, 1f, 1f, 1f);
+                    RenderHelper.disableStandardItemLighting();
                     int i1 = Potion.potionTypes[potion.getPotionID()].getStatusIconIndex();
                     GL11.glScaled(0.5, 0.5, 0.5);
                     mc.getTextureManager().bindTexture(GuiContainer.inventoryBackground);
-                    drawTexturedModalRect((renderX + 4) * 9 / 4.5f, (renderY + yOffset + 1f + potions.indexOf(potion) * 13) * 9 / 4.5f, i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18);
+                    drawTexturedModalRect(
+                            (renderX + 4) * 9 / 4.5f,
+                            (renderY + yOffset + 1f + potions.indexOf(potion) * 13) * 9 / 4.5f,
+                            i1 % 8 * 18,
+                            198 + i1 / 8 * 18,
+                            18, 18
+                    );
                     GL11.glScaled(2, 2, 2);
-                    RenderHelper.disableStandardItemLighting();
+                    RenderHelper.enableGUIStandardItemLighting();
+                    GL11.glPopAttrib();
                     GL11.glPopMatrix();
                 }
 
