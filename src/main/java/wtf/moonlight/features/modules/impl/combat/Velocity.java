@@ -26,6 +26,7 @@ import wtf.moonlight.features.modules.ModuleCategory;
 import wtf.moonlight.features.modules.ModuleInfo;
 import wtf.moonlight.features.modules.impl.movement.LongJump;
 import wtf.moonlight.features.modules.impl.movement.Scaffold;
+import wtf.moonlight.features.values.impl.BoolValue;
 import wtf.moonlight.features.values.impl.ModeValue;
 import wtf.moonlight.features.values.impl.SliderValue;
 import wtf.moonlight.utils.packet.PacketUtils;
@@ -189,9 +190,11 @@ public class Velocity extends Module {
                     veloPacket = true;
                     break;
                 case "Percentages" :
-                    s12.motionX = (int) ((double) s12.motionX * ((double) horizontal.get() / 100.0D));
-                    s12.motionY = (int) ((double) s12.motionY * ((double) vertical.get() / 100.0D));
-                    s12.motionZ = (int) ((double) s12.motionZ * ((double) horizontal.get() / 100.0D));
+                    if (mc.thePlayer.fallDistance < 5) {
+                        s12.motionX = (int) ((double) s12.motionX * ((double) horizontal.get() / 100.0D));
+                        s12.motionY = (int) ((double) s12.motionY * ((double) vertical.get() / 100.0D));
+                        s12.motionZ = (int) ((double) s12.motionZ * ((double) horizontal.get() / 100.0D));
+                    }
                     break;
             }
         }
