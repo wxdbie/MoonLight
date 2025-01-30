@@ -450,4 +450,62 @@ public class MovementUtils implements InstanceAccess {
         }
         return null;
     }
+
+    public static void handleUsingItem() {
+        if (mc.thePlayer.onGround) {
+            mc.thePlayer.motionX *= 1.52;
+            mc.thePlayer.motionZ *= 1.52;
+        }
+    }
+
+    public static void handleMovement() {
+        if (mc.thePlayer.onGround) {
+            handleGroundMovement();
+        } else {
+            handleAirMovement();
+        }
+    }
+
+    private static void handleGroundMovement() {
+        if (mc.thePlayer.isSprinting()) {
+            if (isMovingForwardAndSideways()) {
+                mc.thePlayer.motionX *= 1.008;
+                mc.thePlayer.motionZ *= 1.008;
+            } else if (isMovingForward()) {
+                mc.thePlayer.motionX *= 1.023;
+                mc.thePlayer.motionZ *= 1.023;
+                if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+                    mc.timer.timerSpeed = 1.008F;
+                    mc.thePlayer.motionX *= 1.008;
+                    mc.thePlayer.motionZ *= 1.008;
+                }
+            }
+        } else {
+            if (isMovingForwardAndSideways()) {
+                mc.thePlayer.motionX *= 1.2;
+                mc.thePlayer.motionZ *= 1.2;
+            } else if (isMovingForward()) {
+                mc.thePlayer.motionX *= 1.21;
+                mc.thePlayer.motionZ *= 1.21;
+            }
+        }
+        mc.timer.timerSpeed = 1.0f;
+    }
+
+    private static void handleAirMovement() {
+        mc.timer.timerSpeed = 1.008f;
+        mc.thePlayer.motionX *= 1.013;
+        mc.thePlayer.motionZ *= 1.013;
+        if (mc.thePlayer.fallDistance < 0.1) {
+            mc.thePlayer.motionY *= 1.029;
+        }
+    }
+
+    private static boolean isMovingForward() {
+        return mc.gameSettings.keyBindForward.isKeyDown();
+    }
+
+    private static boolean isMovingForwardAndSideways() {
+        return (mc.gameSettings.keyBindRight.isKeyDown() || mc.gameSettings.keyBindLeft.isKeyDown()) && isMovingForward();
+    }
 }

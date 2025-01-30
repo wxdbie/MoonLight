@@ -44,7 +44,7 @@ import java.util.Objects;
 
 @ModuleInfo(name = "Speed", category = ModuleCategory.Movement, key = Keyboard.KEY_V)
 public class Speed extends Module {
-    private final ModeValue mode = new ModeValue("Mode", new String[]{"Watchdog", "EntityCollide", "BlocksMC", "Intave", "NCP", "Miniblox"}, "Watchdog", this);
+    private final ModeValue mode = new ModeValue("Mode", new String[]{"Watchdog", "EntityCollide", "BlocksMC", "Intave", "NCP", "Miniblox", "Legit"}, "Watchdog", this);
     private final ModeValue wdMode = new ModeValue("Watchdog Mode", new String[]{"Basic", "Glide","Full Strafe", "Test"}, "Basic", this, () -> mode.is("Watchdog"));
     private final BoolValue fallStrafe = new BoolValue("Fall Strafe", true, this, () -> mode.is("Watchdog") && wdMode.is("Full Strafe"));
     private final BoolValue frictionOverride = new BoolValue("Friction Override", true, this, () -> mode.is("Watchdog") && wdMode.is("Full Strafe"));
@@ -103,6 +103,7 @@ public class Speed extends Module {
         if(forceStop.get()){
             MovementUtils.strafe(0);
         }
+        mc.timer.timerSpeed = 1.0f;
     }
 
     @EventTarget
@@ -320,6 +321,13 @@ public class Speed extends Module {
                             }
                         }
                     }
+                }
+                break;
+            case "Legit":
+                if (mc.thePlayer.isUsingItem()) {
+                    MovementUtils.handleUsingItem();
+                } else {
+                    MovementUtils.handleMovement();
                 }
                 break;
         }
