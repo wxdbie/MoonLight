@@ -107,6 +107,7 @@ public class ModuleManager {
                 NoFall.class,
                 Stealer.class,
                 BedNuker.class,
+                FastEat.class,
 
                 // Visual
                 Atmosphere.class,
